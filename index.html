@@ -13,43 +13,175 @@
         }
 
         html, body {
-            height: 100%;
+            min-height: 100%;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif;
-            overflow: hidden;
         }
 
         body {
             background-color: #0d1117;
             color: #c9d1d9;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             position: relative;
+            padding: 3rem 1.5rem 5rem;
+            overflow-x: hidden;
+        }
+
+        .bg {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .spotlight {
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(88, 166, 255, 0.18) 0%, rgba(88, 166, 255, 0.06) 30%, transparent 65%);
+            transform: translate(-50%, -50%);
+            left: 50%;
+            top: 50%;
+            transition: left 0.15s ease-out, top 0.15s ease-out;
+            mix-blend-mode: screen;
+            pointer-events: none;
         }
 
         .grid {
             position: absolute;
             inset: 0;
             background-image:
-                linear-gradient(rgba(48, 54, 61, 0.4) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(48, 54, 61, 0.4) 1px, transparent 1px);
-            background-size: 40px 40px;
-            mask-image: radial-gradient(ellipse at center, rgba(0,0,0,0.8) 0%, transparent 70%);
-            -webkit-mask-image: radial-gradient(ellipse at center, rgba(0,0,0,0.8) 0%, transparent 70%);
-            pointer-events: none;
+                linear-gradient(rgba(48, 54, 61, 0.5) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(48, 54, 61, 0.5) 1px, transparent 1px);
+            background-size: 44px 44px;
+            mask-image: radial-gradient(ellipse at center, rgba(0,0,0,0.9) 0%, transparent 75%);
+            -webkit-mask-image: radial-gradient(ellipse at center, rgba(0,0,0,0.9) 0%, transparent 75%);
+            animation: gridDrift 40s linear infinite;
         }
 
-        .container {
-            text-align: center;
+        @keyframes gridDrift {
+            from { background-position: 0 0; }
+            to { background-position: 44px 44px; }
+        }
+
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(90px);
+            opacity: 0.35;
+            mix-blend-mode: screen;
+            --mx: 0px;
+            --my: 0px;
+            transition: transform 0.4s ease-out;
+        }
+
+        .blob-1 {
+            width: 520px;
+            height: 520px;
+            background: radial-gradient(circle, #58a6ff 0%, transparent 70%);
+            top: -180px;
+            left: -140px;
+            animation: drift1 22s ease-in-out infinite;
+        }
+
+        .blob-2 {
+            width: 480px;
+            height: 480px;
+            background: radial-gradient(circle, #a371f7 0%, transparent 70%);
+            bottom: -160px;
+            right: -120px;
+            animation: drift2 26s ease-in-out infinite;
+        }
+
+        .blob-3 {
+            width: 380px;
+            height: 380px;
+            background: radial-gradient(circle, #3fb950 0%, transparent 70%);
+            top: 50%;
+            left: 50%;
+            opacity: 0.18;
+            animation: drift3 30s ease-in-out infinite;
+        }
+
+        @keyframes drift1 {
+            0%, 100% { transform: translate(var(--mx, 0px), var(--my, 0px)) scale(1); }
+            50% { transform: translate(calc(120px + var(--mx, 0px)), calc(80px + var(--my, 0px))) scale(1.15); }
+        }
+
+        @keyframes drift2 {
+            0%, 100% { transform: translate(var(--mx, 0px), var(--my, 0px)) scale(1); }
+            50% { transform: translate(calc(-100px + var(--mx, 0px)), calc(-90px + var(--my, 0px))) scale(1.1); }
+        }
+
+        @keyframes drift3 {
+            0%, 100% { transform: translate(calc(-50% + var(--mx, 0px)), calc(-50% + var(--my, 0px))) scale(1); }
+            50% { transform: translate(calc(-40% + var(--mx, 0px)), calc(-60% + var(--my, 0px))) scale(1.2); }
+        }
+
+        .noise {
+            position: absolute;
+            inset: 0;
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.35 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+            opacity: 0.06;
+            mix-blend-mode: overlay;
+        }
+
+        .particles {
+            position: absolute;
+            inset: 0;
+        }
+
+        .particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            border-radius: 50%;
+            background: #58a6ff;
+            box-shadow: 0 0 6px #58a6ff;
+            opacity: 0;
+            animation: rise linear infinite;
+        }
+
+        @keyframes rise {
+            0% { transform: translateY(0); opacity: 0; }
+            10% { opacity: 0.8; }
+            90% { opacity: 0.8; }
+            100% { transform: translateY(-100vh); opacity: 0; }
+        }
+
+        .particle:nth-child(1)  { left: 6%;  bottom: -10px; animation-duration: 18s; animation-delay: 0s;    background:#58a6ff; box-shadow:0 0 6px #58a6ff; }
+        .particle:nth-child(2)  { left: 14%; bottom: -10px; animation-duration: 22s; animation-delay: 3s;    background:#a371f7; box-shadow:0 0 6px #a371f7; }
+        .particle:nth-child(3)  { left: 22%; bottom: -10px; animation-duration: 20s; animation-delay: 6s;    background:#3fb950; box-shadow:0 0 6px #3fb950; }
+        .particle:nth-child(4)  { left: 30%; bottom: -10px; animation-duration: 26s; animation-delay: 1s;    background:#58a6ff; box-shadow:0 0 6px #58a6ff; }
+        .particle:nth-child(5)  { left: 40%; bottom: -10px; animation-duration: 24s; animation-delay: 4s;    background:#f0f6fc; box-shadow:0 0 6px #f0f6fc; }
+        .particle:nth-child(6)  { left: 48%; bottom: -10px; animation-duration: 19s; animation-delay: 8s;    background:#a371f7; box-shadow:0 0 6px #a371f7; }
+        .particle:nth-child(7)  { left: 58%; bottom: -10px; animation-duration: 23s; animation-delay: 2s;    background:#58a6ff; box-shadow:0 0 6px #58a6ff; }
+        .particle:nth-child(8)  { left: 66%; bottom: -10px; animation-duration: 28s; animation-delay: 5s;    background:#3fb950; box-shadow:0 0 6px #3fb950; }
+        .particle:nth-child(9)  { left: 74%; bottom: -10px; animation-duration: 21s; animation-delay: 9s;    background:#a371f7; box-shadow:0 0 6px #a371f7; }
+        .particle:nth-child(10) { left: 82%; bottom: -10px; animation-duration: 25s; animation-delay: 3s;    background:#58a6ff; box-shadow:0 0 6px #58a6ff; }
+        .particle:nth-child(11) { left: 90%; bottom: -10px; animation-duration: 27s; animation-delay: 7s;    background:#f0f6fc; box-shadow:0 0 6px #f0f6fc; }
+        .particle:nth-child(12) { left: 96%; bottom: -10px; animation-duration: 20s; animation-delay: 10s;   background:#3fb950; box-shadow:0 0 6px #3fb950; }
+
+        @media (prefers-reduced-motion: reduce) {
+            .blob, .particle, .octocat, .dot, .grid { animation: none; }
+        }
+
+        .wrapper {
             position: relative;
             z-index: 1;
-            padding: 2rem;
+            max-width: 960px;
+            margin: 0 auto;
+        }
+
+        .hero {
+            text-align: center;
+            margin-bottom: 4rem;
         }
 
         .octocat {
-            width: 96px;
-            height: 96px;
-            margin: 0 auto 2rem;
+            width: 88px;
+            height: 88px;
+            margin: 0 auto 1.5rem;
             color: #f0f6fc;
             animation: float 4s ease-in-out infinite;
         }
@@ -60,29 +192,184 @@
         }
 
         .logo {
-            font-size: clamp(2.5rem, 8vw, 4.5rem);
+            font-size: clamp(2.5rem, 8vw, 4rem);
             font-weight: 600;
             color: #f0f6fc;
             letter-spacing: -0.02em;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.35rem;
         }
 
         .handle {
             font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
             font-size: 1rem;
             color: #58a6ff;
-            margin-bottom: 2rem;
         }
 
-        .badge {
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #8b949e;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 1.25rem;
+            padding-left: 0.25rem;
+        }
+
+        .section-title::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, #30363d, transparent);
+        }
+
+        .repos {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1rem;
+        }
+
+        .repo {
+            background-color: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 1.1rem 1.15rem;
+            transition: border-color 0.2s ease, transform 0.2s ease, background-color 0.2s ease;
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+            gap: 0.65rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .repo::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--accent, #58a6ff);
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .repo:hover {
+            border-color: #58a6ff;
+            transform: translateY(-2px);
+            background-color: #10161e;
+        }
+
+        .repo:hover::before {
+            opacity: 1;
+        }
+
+        .repo-private {
+            cursor: not-allowed;
+            opacity: 0.75;
+        }
+
+        .repo-private:hover {
+            border-color: #30363d;
+            transform: none;
+            background-color: #0d1117;
+        }
+
+        .repo-private:hover::before {
+            opacity: 0;
+        }
+
+        .repo-name-private {
+            color: #8b949e !important;
+        }
+
+        .repo-head {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .repo-icon {
+            width: 16px;
+            height: 16px;
+            color: #8b949e;
+            flex-shrink: 0;
+        }
+
+        .repo-name {
+            color: #58a6ff;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .repo-visibility {
+            margin-left: auto;
+            font-size: 0.7rem;
+            color: #8b949e;
+            border: 1px solid #30363d;
+            padding: 0.05rem 0.5rem;
+            border-radius: 2rem;
+        }
+
+        .repo-desc {
+            font-size: 0.85rem;
+            color: #8b949e;
+            line-height: 1.5;
+            flex: 1;
+        }
+
+        .repo-meta {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 0.75rem;
+            color: #8b949e;
+        }
+
+        .lang {
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+
+        .lang-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--accent, #58a6ff);
+        }
+
+        .footer {
+            margin-top: 4rem;
+            text-align: center;
+            font-size: 0.75rem;
+            color: #6e7681;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+        }
+
+        .footer a {
+            color: #58a6ff;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        .status {
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
-            padding: 0.4rem 0.85rem;
+            margin-top: 0.85rem;
+            padding: 0.3rem 0.75rem;
             background-color: #161b22;
             border: 1px solid #30363d;
             border-radius: 2rem;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             color: #8b949e;
         }
 
@@ -99,39 +386,186 @@
             0%, 100% { opacity: 1; }
             50% { opacity: 0.4; }
         }
-
-        .footer {
-            position: absolute;
-            bottom: 1.5rem;
-            left: 0;
-            right: 0;
-            text-align: center;
-            font-size: 0.75rem;
-            color: #6e7681;
-            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
-        }
-
-        .footer a {
-            color: #58a6ff;
-            text-decoration: none;
-        }
-
-        .footer a:hover {
-            text-decoration: underline;
-        }
     </style>
 </head>
 <body>
-    <div class="grid"></div>
-    <div class="container">
-        <svg class="octocat" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
-            <path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z"/>
-        </svg>
-        <div class="logo">D-Volk</div>
-        <div class="handle">@d-volk</div>
+    <div class="bg">
+        <div class="spotlight" id="spotlight"></div>
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+        <div class="grid"></div>
+        <div class="particles">
+            <span class="particle"></span>
+            <span class="particle"></span>
+            <span class="particle"></span>
+            <span class="particle"></span>
+            <span class="particle"></span>
+            <span class="particle"></span>
+            <span class="particle"></span>
+            <span class="particle"></span>
+            <span class="particle"></span>
+            <span class="particle"></span>
+            <span class="particle"></span>
+            <span class="particle"></span>
+        </div>
+        <div class="noise"></div>
     </div>
-    <div class="footer">
-        <a href="https://github.com/d-volk" target="_blank" rel="noopener">github.com/d-volk</a>
+    <div class="wrapper">
+        <header class="hero">
+            <svg class="octocat" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+                <path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z"/>
+            </svg>
+            <h1 class="logo">D-Volk</h1>
+            <div class="handle">@d-volk</div>
+            <!-- <div class="status">
+                <span class="dot"></span>
+                <span>Available for collaboration</span>
+            </div> -->
+        </header>
+
+        <section>
+            <h2 class="section-title">Repositories</h2>
+            <div class="repos">
+                <a class="repo" href="https://github.com/d-volk/discord-velocity" target="_blank" rel="noopener" style="--accent:#5865F2;">
+                    <div class="repo-head">
+                        <svg class="repo-icon" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+                            <path d="M2 2.5A2.5 2.5 0 0 1 4.5 0h8.75a.75.75 0 0 1 .75.75v12.5a.75.75 0 0 1-.75.75h-2.5a.75.75 0 0 1 0-1.5h1.75v-2h-8a1 1 0 0 0-.714 1.7.75.75 0 1 1-1.072 1.05A2.495 2.495 0 0 1 2 11.5Zm10.5-1h-8a1 1 0 0 0-1 1v6.708A2.486 2.486 0 0 1 4.5 9h8ZM5 12.25a.25.25 0 0 1 .25-.25h3.5a.25.25 0 0 1 .25.25v3.25a.25.25 0 0 1-.4.2l-1.45-1.087a.249.249 0 0 0-.3 0L5.4 15.7a.25.25 0 0 1-.4-.2Z"/>
+                        </svg>
+                        <span class="repo-name">discord-velocity</span>
+                        <span class="repo-visibility">Public</span>
+                    </div>
+                    <p class="repo-desc">Discord bot bridge for Velocity proxy — connects Minecraft servers with Discord in real time.</p>
+                    <div class="repo-meta">
+                        <span class="lang"><span class="lang-dot"></span>Java</span>
+                    </div>
+                </a>
+
+                <a class="repo" href="https://github.com/d-volk/RouletteChest" target="_blank" rel="noopener" style="--accent:#b07219;">
+                    <div class="repo-head">
+                        <svg class="repo-icon" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+                            <path d="M2 2.5A2.5 2.5 0 0 1 4.5 0h8.75a.75.75 0 0 1 .75.75v12.5a.75.75 0 0 1-.75.75h-2.5a.75.75 0 0 1 0-1.5h1.75v-2h-8a1 1 0 0 0-.714 1.7.75.75 0 1 1-1.072 1.05A2.495 2.495 0 0 1 2 11.5Zm10.5-1h-8a1 1 0 0 0-1 1v6.708A2.486 2.486 0 0 1 4.5 9h8ZM5 12.25a.25.25 0 0 1 .25-.25h3.5a.25.25 0 0 1 .25.25v3.25a.25.25 0 0 1-.4.2l-1.45-1.087a.249.249 0 0 0-.3 0L5.4 15.7a.25.25 0 0 1-.4-.2Z"/>
+                        </svg>
+                        <span class="repo-name">RouletteChest</span>
+                        <span class="repo-visibility">Public</span>
+                    </div>
+                    <p class="repo-desc">Random-loot chest plugin — spin the wheel and see what fortune drops for you.</p>
+                    <div class="repo-meta">
+                        <span class="lang"><span class="lang-dot"></span>Java</span>
+                    </div>
+                </a>
+
+                <a class="repo" href="https://github.com/d-volk/BackPortals" target="_blank" rel="noopener" style="--accent:#a371f7;">
+                    <div class="repo-head">
+                        <svg class="repo-icon" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+                            <path d="M2 2.5A2.5 2.5 0 0 1 4.5 0h8.75a.75.75 0 0 1 .75.75v12.5a.75.75 0 0 1-.75.75h-2.5a.75.75 0 0 1 0-1.5h1.75v-2h-8a1 1 0 0 0-.714 1.7.75.75 0 1 1-1.072 1.05A2.495 2.495 0 0 1 2 11.5Zm10.5-1h-8a1 1 0 0 0-1 1v6.708A2.486 2.486 0 0 1 4.5 9h8ZM5 12.25a.25.25 0 0 1 .25-.25h3.5a.25.25 0 0 1 .25.25v3.25a.25.25 0 0 1-.4.2l-1.45-1.087a.249.249 0 0 0-.3 0L5.4 15.7a.25.25 0 0 1-.4-.2Z"/>
+                        </svg>
+                        <span class="repo-name">BackPortals</span>
+                        <span class="repo-visibility">Public</span>
+                    </div>
+                    <p class="repo-desc">Return-portal system — remembers where you came from and takes you back with one step.</p>
+                    <div class="repo-meta">
+                        <span class="lang"><span class="lang-dot"></span>Java</span>
+                    </div>
+                </a>
+
+                <div class="repo repo-private" style="--accent:#f1e05a;">
+                    <div class="repo-head">
+                        <svg class="repo-icon" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+                            <path d="M4 4a4 4 0 0 1 8 0v2h.25c.966 0 1.75.784 1.75 1.75v5.5A1.75 1.75 0 0 1 12.25 15h-8.5A1.75 1.75 0 0 1 2 13.25v-5.5C2 6.784 2.784 6 3.75 6H4Zm8.25 3.5h-8.5a.25.25 0 0 0-.25.25v5.5c0 .138.112.25.25.25h8.5a.25.25 0 0 0 .25-.25v-5.5a.25.25 0 0 0-.25-.25ZM10.5 6V4a2.5 2.5 0 1 0-5 0v2Z"/>
+                        </svg>
+                        <span class="repo-name repo-name-private">Forest-D.JS-Web</span>
+                        <span class="repo-visibility">Private</span>
+                    </div>
+                    <p class="repo-desc">Web frontend & Discord bot for Forest — a modern JS interface built on top of the Forest ecosystem.</p>
+                    <div class="repo-meta">
+                        <span class="lang"><span class="lang-dot"></span>JavaScript</span>
+                    </div>
+                </div>
+
+                <a class="repo" href="https://github.com/d-volk/Statify" target="_blank" rel="noopener" style="--accent:#1DB954;">
+                    <div class="repo-head">
+                        <svg class="repo-icon" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+                            <path d="M2 2.5A2.5 2.5 0 0 1 4.5 0h8.75a.75.75 0 0 1 .75.75v12.5a.75.75 0 0 1-.75.75h-2.5a.75.75 0 0 1 0-1.5h1.75v-2h-8a1 1 0 0 0-.714 1.7.75.75 0 1 1-1.072 1.05A2.495 2.495 0 0 1 2 11.5Zm10.5-1h-8a1 1 0 0 0-1 1v6.708A2.486 2.486 0 0 1 4.5 9h8ZM5 12.25a.25.25 0 0 1 .25-.25h3.5a.25.25 0 0 1 .25.25v3.25a.25.25 0 0 1-.4.2l-1.45-1.087a.249.249 0 0 0-.3 0L5.4 15.7a.25.25 0 0 1-.4-.2Z"/>
+                        </svg>
+                        <span class="repo-name">Statify</span>
+                        <span class="repo-visibility">Public</span>
+                    </div>
+                    <p class="repo-desc">Player statistics and analytics — track, compare, and visualize server activity.</p>
+                    <div class="repo-meta">
+                        <span class="lang"><span class="lang-dot"></span>Java</span>
+                    </div>
+                </a>
+            </div>
+        </section>
+
+        <div class="footer">
+            <a href="https://github.com/d-volk" target="_blank" rel="noopener">github.com/d-volk</a>
+        </div>
     </div>
+
+    <script>
+        (function () {
+            const spotlight = document.getElementById('spotlight');
+            const blobs = document.querySelectorAll('.blob');
+            const grid = document.querySelector('.grid');
+
+            let targetX = window.innerWidth / 2;
+            let targetY = window.innerHeight / 2;
+            let currentX = targetX;
+            let currentY = targetY;
+
+            window.addEventListener('pointermove', (e) => {
+                targetX = e.clientX;
+                targetY = e.clientY;
+            });
+
+            window.addEventListener('pointerleave', () => {
+                targetX = window.innerWidth / 2;
+                targetY = window.innerHeight / 2;
+            });
+
+            function animate() {
+                currentX += (targetX - currentX) * 0.08;
+                currentY += (targetY - currentY) * 0.08;
+
+                if (spotlight) {
+                    spotlight.style.left = currentX + 'px';
+                    spotlight.style.top = currentY + 'px';
+                }
+
+                const w = window.innerWidth;
+                const h = window.innerHeight;
+                const dx = (currentX / w - 0.5) * 2;
+                const dy = (currentY / h - 0.5) * 2;
+
+                blobs.forEach((blob, i) => {
+                    const strength = 30 + i * 15;
+                    const dir = i % 2 === 0 ? 1 : -1;
+                    blob.style.setProperty('--mx', (dx * strength * dir) + 'px');
+                    blob.style.setProperty('--my', (dy * strength * dir) + 'px');
+                });
+
+                if (grid) {
+                    grid.style.transform = `translate(${dx * -10}px, ${dy * -10}px)`;
+                }
+
+                requestAnimationFrame(animate);
+            }
+            animate();
+
+            document.querySelectorAll('.repo:not(.repo-private)').forEach((card) => {
+                card.addEventListener('pointermove', (e) => {
+                    const r = card.getBoundingClientRect();
+                    const px = (e.clientX - r.left) / r.width - 0.5;
+                    const py = (e.clientY - r.top) / r.height - 0.5;
+                    card.style.transform = `translateY(-2px) perspective(700px) rotateX(${-py * 4}deg) rotateY(${px * 4}deg)`;
+                });
+                card.addEventListener('pointerleave', () => {
+                    card.style.transform = '';
+                });
+            });
+        })();
+    </script>
 </body>
 </html>
